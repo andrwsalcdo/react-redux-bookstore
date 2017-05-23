@@ -1,6 +1,8 @@
 // ./src/components/book/BookPage.js
 
 import React from 'react';
+import { connect } from 'react-redux';
+import * as bookActions from '../../actions/bookActions';
 
 class Book extends React.Component {
   constructor(props) {
@@ -10,7 +12,7 @@ class Book extends React.Component {
 
   // Submit book handler
   submitBook(input) {
-      alert('Submitted')
+      this.props.createBook(input);
   }
 
   render(){
@@ -21,7 +23,6 @@ class Book extends React.Component {
       <div>
         <h3>Books</h3>
         <ul>
-          { /* Traverse Books Array */}
           {this.props.books.map((b,i) => <li key={i}>{b.title}</li> )}
         </ul>
         <div>
@@ -45,4 +46,21 @@ class Book extends React.Component {
   }
 }
 
-export default Book; 
+// Maps state from store to props
+const mapStateToProps = (state, ownProps) => {
+    return {
+        // you can now say this.props.books
+        books: state.books
+    }
+};
+
+// Maps actions to props
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // you can now say this.props.createBook
+        createBook: book => dispatch(bookActions.createBook(book))
+    }
+};
+
+// use connect to put them together
+export default connect(mapStateToProps, mapDispatchToProps)(Book);
